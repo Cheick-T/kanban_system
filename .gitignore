@@ -1,0 +1,5 @@
+.python-version
+.vscode/
+kanban.code-workspace
+static
+__pycache__/
