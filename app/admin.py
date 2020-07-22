@@ -11,6 +11,7 @@ from reversion.admin import VersionAdmin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
+from mptt.admin import DraggableMPTTAdmin
 
 admin.site.site_header = 'Archivage des dossiers'
 
@@ -150,10 +151,17 @@ class EmplacementAdmin(TreeAdmin, BaseApplicationAdmin):
     form = movenodeform_factory(Emplacement)
 
 
+class EmplacementMPTTAdmin(DraggableMPTTAdmin, BaseApplicationAdmin):
+    mptt_level_indent = 20
+    list_display = ['tree_actions', 'indented_title', ]
+    list_display_links = ['indented_title', ]
+
+
 # Register your models here.
 admin.site.register(AgentCategory)
 admin.site.register(FolderCategory)
 admin.site.register(Agent)
 admin.site.register(Dossier, DossierAdmin)
 admin.site.register(Emplacement, EmplacementAdmin)
+admin.site.register(EmplacementMPTT, EmplacementMPTTAdmin)
 admin.site.register(Mouvement, MouvementAdmin)

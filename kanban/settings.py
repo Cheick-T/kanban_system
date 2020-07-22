@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'api',
-    'treebeard',
+    # 'treebeard',
+    'mptt',
     'import_export',
     'reversion',
 
