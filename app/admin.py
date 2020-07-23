@@ -57,6 +57,14 @@ class MouvementAdmin(BaseApplicationAdmin):
     search_fields = ['dossier__code']
     list_filter = ['agent', 'creation_time', ]
     list_select_related = ('dossier', 'agent', 'emplacement',)
+    readonly_fields = ['sens', 'dossier', 'agent',
+                       'emplacement', 'update_time', 'creation_time']
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 class MouvementInline(admin.TabularInline):
@@ -72,6 +80,9 @@ class MouvementInline(admin.TabularInline):
         return False
 
     def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
         return False
 
 
