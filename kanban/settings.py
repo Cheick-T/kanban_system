@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'treebeard',
     'import_export',
     'reversion',
+    'mptt',
 
     'river',
     'river_admin',

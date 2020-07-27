@@ -1,6 +1,8 @@
 from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
 from treebeard.mp_tree import MP_Node
 from river.models.fields.state import StateField
+from mptt.forms import TreeNodeChoiceField
 
 
 class TimedModel(models.Model):
@@ -94,14 +96,33 @@ class Emplacement(TimedModel, MP_Node):
         verbose_name_plural = "Emplacements de dossiers"
 
 
+class EmplacementMPTT(TimedModel, MPTTModel):
+    name = models.CharField(max_length=30, unique=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE,
+                            null=True, blank=True, related_name='children')
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    class Meta:
+        verbose_name = "Emplacement de dossiers MPTT"
+        verbose_name_plural = "Emplacements de dossiers MPTT"
+
+    
+    def __str__(self):
+        return "{}".format(self.name)
+
+
 class Mouvement(TimedModel):
 
     dossier = models.ForeignKey(
         "Dossier", on_delete=models.PROTECT, related_name="mouvements")
     agent = models.ForeignKey(
         "Agent", on_delete=models.SET_NULL, null=True, related_name="mouvements")
-    emplacement = models.ForeignKey("Emplacement", on_delete=models.SET_NULL, null=True,
-                                    related_name="mouvements")
+    emplacement = TreeForeignKey("EmplacementMPTT", on_delete=models.SET_NULL, null=True,
+                                    related_name="mouvements",)
+     #models.ForeignKey("EmplacementMPTT", on_delete=models.SET_NULL, null=True,
+                                    #related_name="mouvements")
     sens = models.CharField("Sens", max_length=3, blank=True)
 
     def save(self, *args, **kwargs):

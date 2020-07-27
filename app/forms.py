@@ -1,12 +1,14 @@
 from django import forms
 
-from .models import Mouvement
+
+from .models import Mouvement,EmplacementMPTT
 
 
 class InForm(forms.ModelForm):
     class Meta:
         model = Mouvement
         fields = ['dossier', 'emplacement']
+
 
     def __init__(self, *args, **kwargs):
         super(InForm, self).__init__(*args, **kwargs)

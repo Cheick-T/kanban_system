@@ -3,6 +3,7 @@ from .models import *
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 
+from mptt.admin import DraggableMPTTAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from reversion.admin import VersionAdmin
@@ -66,6 +67,9 @@ class MouvementAdmin(BaseApplicationAdmin):
     def has_add_permission(self, request, obj=None):
         return False
 
+    def has_change_permission(self, request, obj=None):
+        return False
+
 
 class MouvementInline(admin.TabularInline):
     model = Mouvement
@@ -126,7 +130,7 @@ class DossierAdmin(BaseApplicationAdmin):
         #    return ancetres + " > " + obj.emplacement.name
         # else:
         #    return obj.mouvements.latest('creation_time').agent
-
+        print(obj)
         if obj.state.description == "in":
 
             ancetres = ' > '.join(
@@ -161,10 +165,21 @@ class EmplacementAdmin(TreeAdmin, BaseApplicationAdmin):
     form = movenodeform_factory(Emplacement)
 
 
+
+
+class EmplacementMPTTAdmin(DraggableMPTTAdmin, BaseApplicationAdmin):
+    mptt_level_indent = 20
+    list_display = ['tree_actions', 'indented_title', ]
+    list_display_links = ['indented_title', ]
+
+
+
+
 # Register your models here.
 admin.site.register(AgentCategory)
 admin.site.register(FolderCategory)
 admin.site.register(Agent)
 admin.site.register(Dossier, DossierAdmin)
 admin.site.register(Emplacement, EmplacementAdmin)
+admin.site.register(EmplacementMPTT, EmplacementMPTTAdmin)
 admin.site.register(Mouvement, MouvementAdmin)
