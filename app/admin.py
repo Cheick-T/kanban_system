@@ -7,7 +7,7 @@ from mptt.admin import DraggableMPTTAdmin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from reversion.admin import VersionAdmin
-
+from django.db.models import F
 
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -54,7 +54,7 @@ class BaseApplicationAdmin(VersionAdmin):
 
 class MouvementAdmin(BaseApplicationAdmin):
     list_display = ['dossier', 'agent',
-                    'emplacement', 'creation_time', ]
+                    'emplacement', 'creation_time',]#'timeout' ]
     search_fields = ['dossier__code']
     list_filter = ['agent', 'creation_time', ]
     list_select_related = ('dossier', 'agent', 'emplacement',)
@@ -100,7 +100,7 @@ class MouvementCreationInline(admin.TabularInline):
 
 class DossierAdmin(BaseApplicationAdmin):
     list_display = ['categorie_dossier', 'code', 'location',
-                    'state', 'actions_buttons']
+                    'state', 'actions_buttons',]
     list_display_links = ['categorie_dossier', 'code', ]
     search_fields = ['code']
     list_filter = ['categorie_dossier__title', 'state', 'creation_time', ]
@@ -174,6 +174,19 @@ class EmplacementMPTTAdmin(DraggableMPTTAdmin, BaseApplicationAdmin):
 
 
 
+class DossierOut(Dossier):
+    class Meta:
+        proxy = True
+
+class DossierOutAdmin(DossierAdmin):
+    list_display = ['categorie_dossier', 'code', 'location','date_last_out']
+    def get_queryset(self, request):
+        return self.model.objects.filter(state__description='out')#objects.exclude(state=F("In"))
+
+
+
+
+
 
 # Register your models here.
 admin.site.register(AgentCategory)
@@ -183,3 +196,4 @@ admin.site.register(Dossier, DossierAdmin)
 admin.site.register(Emplacement, EmplacementAdmin)
 admin.site.register(EmplacementMPTT, EmplacementMPTTAdmin)
 admin.site.register(Mouvement, MouvementAdmin)
+admin.site.register(DossierOut, DossierOutAdmin)

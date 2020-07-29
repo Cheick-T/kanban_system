@@ -3,7 +3,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from treebeard.mp_tree import MP_Node
 from river.models.fields.state import StateField
 from mptt.forms import TreeNodeChoiceField
-
+from datetime import datetime, timezone
 
 class TimedModel(models.Model):
 
@@ -72,6 +72,10 @@ class Dossier(TimedModel):
     #    "Emplacement", on_delete=models.PROTECT, related_name="dossiers")
     state = StateField(editable=False)
 
+    @property
+    def date_last_out(self):
+        return datetime.now(timezone.utc)-list(self.mouvements.filter(sens='out').values('creation_time'))[-1]['creation_time']
+
     def __str__(self):
         return "{} / {}".format(self.categorie_dossier, self.code)
 
@@ -124,6 +128,17 @@ class Mouvement(TimedModel):
      #models.ForeignKey("EmplacementMPTT", on_delete=models.SET_NULL, null=True,
                                     #related_name="mouvements")
     sens = models.CharField("Sens", max_length=3, blank=True)
+
+    """
+    @property
+    def timeout(self):
+        today=datetime.now(timezone.utc)
+        if self.sens=='out':
+            time=today - self.creation_time
+        else:
+            time= 'N/A'
+        return time
+    """
 
     def save(self, *args, **kwargs):
         if self.agent:
