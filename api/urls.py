@@ -30,4 +30,11 @@ urlpatterns = [
 
     path('dossiers', views.ListDossier.as_view()),
     path('dossiers/<int:pk>', views.DetailDossier.as_view()),
+
+    path('agents', views.ListAgent.as_view()),
+    path('agents/<int:pk>', views.DetailAgent.as_view()),
+
+    path('mouvements', views.ListMouvement.as_view()),
+    path('mouvements/<int:pk>', views.DetailMouvement.as_view()),
+
 ]
