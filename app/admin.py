@@ -9,6 +9,7 @@ from import_export.admin import ImportExportModelAdmin
 from reversion.admin import VersionAdmin
 from django.db.models import F
 
+
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
@@ -161,8 +162,8 @@ class DossierAdmin(BaseApplicationAdmin):
         return False
 
 
-class EmplacementAdmin(TreeAdmin, BaseApplicationAdmin):
-    form = movenodeform_factory(Emplacement)
+#class EmplacementAdmin(TreeAdmin, BaseApplicationAdmin):
+#    form = movenodeform_factory(Emplacement)
 
 
 
@@ -193,7 +194,7 @@ admin.site.register(AgentCategory)
 admin.site.register(FolderCategory)
 admin.site.register(Agent)
 admin.site.register(Dossier, DossierAdmin)
-admin.site.register(Emplacement, EmplacementAdmin)
+#admin.site.register(Emplacement, EmplacementAdmin)
 admin.site.register(EmplacementMPTT, EmplacementMPTTAdmin)
 admin.site.register(Mouvement, MouvementAdmin)
 admin.site.register(DossierOut, DossierOutAdmin)

@@ -4,7 +4,7 @@ from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 
 from river.models import State
-from app.models import Dossier, Mouvement, Agent, Emplacement
+from app.models import Dossier, Mouvement, Agent#, Emplacement
 
 from .forms import InForm, OutForm
 from django.views.generic.edit import CreateView
@@ -25,18 +25,29 @@ class InMouvement(CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.save()
+        try:
+            self.object.save()
+            try:
+                dossier = get_object_or_404(
+                Dossier, pk=self.kwargs.get('dossier_id'))
+                next_state = get_object_or_404(
+                State, pk=self.kwargs.get('next_state_id'))
 
-        dossier = get_object_or_404(
-            Dossier, pk=self.kwargs.get('dossier_id'))
-        next_state = get_object_or_404(
-            State, pk=self.kwargs.get('next_state_id'))
+                dossier.river.state.approve(
+                    as_user=self.request.user, next_state=next_state)
 
-        dossier.river.state.approve(
-            as_user=self.request.user, next_state=next_state)
+                return HttpResponseRedirect(self.get_success_url())
+
+            except :
+                self.object.delete()
+
+        except:
+            print("An exception occurred while saving mouvemnt")
+
+
 
         # TODO: et en cas de problème pour changer l'état, supprimer l'object Mouvement précédemment créé
-        return HttpResponseRedirect(self.get_success_url())
+        
 
 
 class OutMouvement(CreateView):
@@ -52,18 +63,27 @@ class OutMouvement(CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.save()
 
-        dossier = get_object_or_404(
-            Dossier, pk=self.kwargs.get('dossier_id'))
-        next_state = get_object_or_404(
-            State, pk=self.kwargs.get('next_state_id'))
+        try :
+            self.object.save()
 
-        dossier.river.state.approve(
-            as_user=self.request.user, next_state=next_state)
+            try:
 
-        # TODO: et en cas de problème pour changer l'état, supprimer l'object Mouvement précédemment créé
-        return HttpResponseRedirect(self.get_success_url())
+                dossier = get_object_or_404(
+                    Dossier, pk=self.kwargs.get('dossier_id'))
+                next_state = get_object_or_404(
+                    State, pk=self.kwargs.get('next_state_id'))
+
+                dossier.river.state.approve(
+                    as_user=self.request.user, next_state=next_state)
+
+                # TODO: et en cas de problème pour changer l'état, supprimer l'object Mouvement précédemment créé
+                return HttpResponseRedirect(self.get_success_url())
+
+            except:
+                self.object.delete()
+        except:
+            print("An exception occurred while saving mouvemnt")
 
 
 """

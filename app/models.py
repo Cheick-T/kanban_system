@@ -87,7 +87,7 @@ class Dossier(TimedModel):
         ]
 
 
-class Emplacement(TimedModel, MP_Node):
+"""class Emplacement(TimedModel, MP_Node):
     name = models.CharField(max_length=30)
 
     node_order_by = ['name']
@@ -99,11 +99,15 @@ class Emplacement(TimedModel, MP_Node):
         verbose_name = "Emplacement de dossiers"
         verbose_name_plural = "Emplacements de dossiers"
 
+"""
+
 
 class EmplacementMPTT(TimedModel, MPTTModel):
     name = models.CharField(max_length=30, unique=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE,
                             null=True, blank=True, related_name='children')
+
+
 
     class MPTTMeta:
         order_insertion_by = ['name']
