@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
 
 from river.models import State
 from app.models import Dossier, Mouvement, Agent#, Emplacement
@@ -10,6 +11,7 @@ from .forms import InForm, OutForm
 from django.views.generic.edit import CreateView
 
 # TODO : handle transactions
+
 
 
 class InMouvement(CreateView):
@@ -35,6 +37,8 @@ class InMouvement(CreateView):
 
                 dossier.river.state.approve(
                     as_user=self.request.user, next_state=next_state)
+
+                #messages.success(request, f"Modification approuvée pour le dossier: {dossier}")
 
                 return HttpResponseRedirect(self.get_success_url())
 
@@ -77,13 +81,15 @@ class OutMouvement(CreateView):
                 dossier.river.state.approve(
                     as_user=self.request.user, next_state=next_state)
 
+                #messages.success(request, f"Modification approuvée pour le dossier: {dossier}")
+
                 # TODO: et en cas de problème pour changer l'état, supprimer l'object Mouvement précédemment créé
                 return HttpResponseRedirect(self.get_success_url())
-
             except:
                 self.object.delete()
         except:
-            print("An exception occurred while saving mouvemnt")
+            print("error mouvement")
+          
 
 
 """
