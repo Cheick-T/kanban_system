@@ -48,7 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
       responsive: true,
       scales: {
         xAxes: [
-          {
+          { 
+            offset:true,
             type: 'time',
             time: {
               unit: 'day',
@@ -94,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
       scales: {
         xAxes: [
           {
+            offset:true,
           	gridLines: {
                     offsetGridLines: true,
                     display: true,

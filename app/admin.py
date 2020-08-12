@@ -173,7 +173,7 @@ class DossierAdmin(BaseApplicationAdmin):
             return ancetres + " > " + obj.mouvements.filter(sens="in").latest('creation_time').emplacement.name
         else:
             return obj.mouvements.filter(sens="out").latest('creation_time').agent
-
+    
     def actions_buttons(self, obj):
         content = ""
         for transition_approval in obj.river.state.get_available_approvals(as_user=self.user):
@@ -211,7 +211,8 @@ class DossierOut(Dossier):
         proxy = True
 
 class DossierOutAdmin(DossierAdmin):
-    list_display = ['categorie_dossier', 'code', 'location','date_last_out']
+    list_display = ['categorie_dossier', 'code', 'location',
+    'date_last_out']
     def get_queryset(self, request):
         return self.model.objects.filter(state__description='out')#objects.exclude(state=F("In"))
 
