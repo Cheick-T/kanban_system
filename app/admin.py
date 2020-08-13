@@ -11,17 +11,13 @@ from django.db.models import F
 
 from django.db.models import Count
 from django.db.models.functions import TruncDay
-# Register your models here.
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-
 
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-
 admin.site.site_header = 'Archivage des dossiers'
-
 admin.site.site_title = 'Archivage des dossiers'
 admin.site.index_title = "Espace d'administration"
 
@@ -215,7 +211,7 @@ class DossierOut(Dossier):
 	verbose_name_plural = "Rapport - Liste des dossiers out"
 
 class DossierOutAdmin(DossierAdmin):
-    list_display = ['categorie_dossier', 'code', 'location', 'date_last_out']
+    list_display = ['categorie_dossier', 'code', 'location', 'out_since']
     def get_queryset(self, request):
         return self.model.objects.filter(state__description='out')
 
