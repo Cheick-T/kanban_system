@@ -154,7 +154,7 @@ class DossierAdmin(BaseApplicationAdmin):
     list_filter = ['categorie_dossier__title', DansSalleArchivageFilter, 'state', 'creation_time']
     list_select_related = ('categorie_dossier', )
 
-    
+
     def is_in_archive(self, obj):
         return obj.state.description == "in"
     is_in_archive.boolean = True
@@ -220,7 +220,7 @@ class DossierAdmin(BaseApplicationAdmin):
 
 
 
-class EmplacementMPTTAdmin(DraggableMPTTAdmin, BaseApplicationAdmin):
+class EmplacementMPTTAdmin(DraggableMPTTAdmin, VersionAdmin,admin.ModelAdmin):
     mptt_level_indent = 20
     list_display = ['tree_actions', 'indented_title', ]
     list_display_links = ['indented_title', ]
@@ -235,7 +235,7 @@ class DossierOutAdmin(DossierAdmin):
     list_display = ['categorie_dossier', 'code', 'location',
     'date_last_out']
     def get_queryset(self, request):
-        return self.model.objects.filter(state__description='out')#objects.exclude(state=F("In"))
+        return self.model.objects.filter(state__description='out')
 
     def has_add_permission(self, request, obj=None):
         return False

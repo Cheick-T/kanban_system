@@ -4,6 +4,7 @@ from treebeard.mp_tree import MP_Node
 from river.models.fields.state import StateField
 from mptt.forms import TreeNodeChoiceField
 from datetime import datetime, timezone
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 class TimedModel(models.Model):
 
@@ -74,7 +75,7 @@ class Dossier(TimedModel):
 
     @property
     def date_last_out(self):
-        return datetime.now(timezone.utc)-list(self.mouvements.filter(sens='out').values('creation_time'))[-1]['creation_time']
+        return naturaltime(datetime.now(timezone.utc)-list(self.mouvements.filter(sens='out').values('creation_time'))[-1]['creation_time'])
 
     def __str__(self):
         return "{} / {}".format(self.categorie_dossier, self.code)
