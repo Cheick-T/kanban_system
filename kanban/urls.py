@@ -9,7 +9,7 @@ from django.contrib.auth import views as auth_views
 from django.conf.urls import url
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', admin.site.urls),
     url(r'^app/', include('app.urls')),
     url(r'^api/', include('api.urls')),
 
