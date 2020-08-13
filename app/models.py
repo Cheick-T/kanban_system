@@ -5,6 +5,7 @@ from river.models.fields.state import StateField
 from mptt.forms import TreeNodeChoiceField
 from datetime import datetime, timezone
 from django.contrib.humanize.templatetags.humanize import naturaltime
+from django.utils.timesince import timesince
 
 class TimedModel(models.Model):
 
@@ -72,8 +73,8 @@ class Dossier(TimedModel):
     state = StateField(editable=False)
 
     @property
-    def date_last_out(self):
-        return naturaltime(datetime.now(timezone.utc)-list(self.mouvements.filter(sens='out').values('creation_time'))[-1]['creation_time'])
+    def out_since(self):
+        return timesince(self.mouvements.filter(sens='out').latest('creation_time').creation_time)
 
     def __str__(self):
         return "{} / {}".format(self.categorie_dossier, self.code)
