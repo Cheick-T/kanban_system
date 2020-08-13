@@ -11,25 +11,18 @@ from django.db.models import F
 
 from django.db.models import Count
 from django.db.models.functions import TruncDay
-# Register your models here.
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-
 
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-
 admin.site.site_header = 'Archivage des dossiers'
-
 admin.site.site_title = 'Archivage des dossiers'
 admin.site.index_title = "Espace d'administration"
 
 
 def create_actions_buttons(obj, transition_approval):
-    # approbation_url = reverse('valider_mouvement', kwargs={
-    #                          'dossier_id': obj.pk, 'next_state_id': transition_approval.transition.destination_state.pk})
-
     sens_mouvement = transition_approval.transition.destination_state.description
 
     if sens_mouvement == 'in':
@@ -57,13 +50,12 @@ def create_actions_buttons(obj, transition_approval):
 class DansSalleArchivageFilter(admin.SimpleListFilter):
     title = 'presence_salle_archivage'
     parameter_name = 'is_in_archive'
-
+    
     def lookups(self, request, model_admin):
         return (
             ('Oui', 'Oui'),
             ('Non', 'Non'),
         )
-
     def queryset(self, request, queryset):
         value = self.value()
         if value == 'Oui':
@@ -155,11 +147,10 @@ class DossierAdmin(BaseApplicationAdmin):
     list_filter = ['categorie_dossier__title', DansSalleArchivageFilter, 'state', 'creation_time']
     list_select_related = ('categorie_dossier', )
 
+
     def is_in_archive(self, obj):
         return obj.state.description == "in"
-
     is_in_archive.boolean = True
-
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -185,7 +176,7 @@ class DossierAdmin(BaseApplicationAdmin):
             return ancetres + " > " + obj.mouvements.filter(sens="in").latest('creation_time').emplacement.name
         else:
             return obj.mouvements.filter(sens="out").latest('creation_time').agent
-
+    
     def actions_buttons(self, obj):
         content = ""
         for transition_approval in obj.river.state.get_available_approvals(as_user=self.user):
@@ -205,20 +196,11 @@ class DossierAdmin(BaseApplicationAdmin):
         return False
 
 
-    def message_user(self, request, message, level=messages.INFO, extra_tags='', fail_silently=False):
-        pass
-
-    def save_model(self, request, obj, form, change):
-        messages.success(request, mark_safe('Salut! <br/> <b>Cheick TAYORO ;)</b>'))
-        super(DossierAdmin, self).save_model(request, obj, form, change)
-
-
-
-class EmplacementMPTTAdmin(DraggableMPTTAdmin, BaseApplicationAdmin):
+class EmplacementMPTTAdmin(DraggableMPTTAdmin, VersionAdmin,admin.ModelAdmin):
     mptt_level_indent = 20
     list_display = ['tree_actions', 'indented_title', ]
     list_display_links = ['indented_title', ]
-
+    readonly_fields = ['update_time', 'creation_time']
 
 class DossierOut(Dossier):
     class Meta:
@@ -226,22 +208,14 @@ class DossierOut(Dossier):
         verbose_name_plural = "Rapport - Liste des dossiers out"
 
 class DossierOutAdmin(DossierAdmin):
-    list_display = ['categorie_dossier', 'code', 'location','date_last_out','out_since']
-
+    list_display = ['categorie_dossier', 'code', 'location', 'out_since']
     def get_queryset(self, request):
         return self.model.objects.filter(state__description='out')
-    
+
     def has_add_permission(self, request, obj=None):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
 
-    def has_change_permission(self, request, obj=None):
-        return False
-
-
-# Register your models here.
 admin.site.register(AgentCategory)
 admin.site.register(FolderCategory)
 admin.site.register(Agent)

@@ -69,13 +69,11 @@ class Dossier(TimedModel):
     code = models.CharField(max_length=10, blank=False)
     categorie_dossier = models.ForeignKey(
         "FolderCategory", on_delete=models.PROTECT, related_name="dossiers")
-    # emplacement = models.ForeignKey(
-    #    "Emplacement", on_delete=models.PROTECT, related_name="dossiers")
     state = StateField(editable=False)
 
     @property
-    def date_last_out(self):
-        return datetime.now(timezone.utc)-list(self.mouvements.filter(sens='out').values('creation_time'))[-1]['creation_time']
+    def out_since(self):
+        return timesince(self.mouvements.filter(sens='out').latest('creation_time').creation_time)
 
     @property
     def out_since(self):
@@ -92,7 +90,6 @@ class Dossier(TimedModel):
             ("can_manipulate_folders", "Can manipulate folders"),
         ]
 
-
 class EmplacementMPTT(TimedModel, MPTTModel):
     name = models.CharField(max_length=30, unique=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE,
@@ -104,7 +101,6 @@ class EmplacementMPTT(TimedModel, MPTTModel):
     class Meta:
         verbose_name = "Emplacement de dossiers"
         verbose_name_plural = "Emplacements de dossiers"
-
     
     def __str__(self):
         return "{}".format(self.name)
@@ -131,6 +127,6 @@ class Mouvement(TimedModel):
         return ""
 
     class Meta:
-        verbose_name = "mouvement"
+        verbose_name = "Mouvement de dossier"
         verbose_name_plural = "Rapport - Mouvements des dossiers"
-        ordering = ['-creation_time', ]
+        ordering = ['dossier', '-creation_time', ]
