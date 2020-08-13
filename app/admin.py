@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from .models import *
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
@@ -54,6 +54,24 @@ def create_actions_buttons(obj, transition_approval):
 	"""
 
 
+class DansSalleArchivageFilter(admin.SimpleListFilter):
+    title = 'presence_salle_archivage'
+    parameter_name = 'is_in_archive'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('Oui', 'Oui'),
+            ('Non', 'Non'),
+        )
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == 'Oui':
+            return queryset.filter(state__description="in")
+        elif value == 'Non':
+            return queryset.exclude(state__description="in")
+        return queryset
+
 class BaseApplicationAdmin(VersionAdmin,admin.ModelAdmin):
     date_hierarchy = 'update_time'
     readonly_fields = ['update_time', 'creation_time']
@@ -76,7 +94,6 @@ class MouvementAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return False
-
 
     def changelist_view(self, request, extra_context=None):
         # Aggregate new subscribers per day
@@ -131,12 +148,18 @@ class MouvementCreationInline(admin.TabularInline):
 
 
 class DossierAdmin(BaseApplicationAdmin):
-    list_display = ['categorie_dossier', 'code', 'location',
+    list_display = ['is_in_archive','categorie_dossier', 'code', 'location',
                     'state', 'actions_buttons',]
     list_display_links = ['categorie_dossier', 'code', ]
     search_fields = ['code']
-    list_filter = ['categorie_dossier__title', 'state', 'creation_time', ]
+    list_filter = ['categorie_dossier__title', DansSalleArchivageFilter, 'state', 'creation_time']
     list_select_related = ('categorie_dossier', )
+
+    def is_in_archive(self, obj):
+        return obj.state.description == "in"
+
+    is_in_archive.boolean = True
+
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -156,20 +179,9 @@ class DossierAdmin(BaseApplicationAdmin):
         return super(DossierAdmin, self).get_list_display(request)
 
     def location(self, obj):
-        # if obj.state.description == "in":
-        #    ancetres = ' > '.join(
-        #        [x.name for x in obj.emplacement.get_ancestors()])
-        #    return ancetres + " > " + obj.emplacement.name
-        # else:
-        #    return obj.mouvements.latest('creation_time').agent
-        print(obj)
         if obj.state.description == "in":
-
             ancetres = ' > '.join(
                 [x.name for x in obj.mouvements.filter(sens="in").latest('creation_time').emplacement.get_ancestors()])
-            print(ancetres)
-            print(type(obj.mouvements.filter(sens="in").latest(
-                'creation_time').emplacement))
             return ancetres + " > " + obj.mouvements.filter(sens="in").latest('creation_time').emplacement.name
         else:
             return obj.mouvements.filter(sens="out").latest('creation_time').agent
@@ -193,9 +205,12 @@ class DossierAdmin(BaseApplicationAdmin):
         return False
 
 
-#class EmplacementAdmin(TreeAdmin, BaseApplicationAdmin):
-#    form = movenodeform_factory(Emplacement)
+    def message_user(self, request, message, level=messages.INFO, extra_tags='', fail_silently=False):
+        pass
 
+    def save_model(self, request, obj, form, change):
+        messages.success(request, mark_safe('Salut! <br/> <b>Cheick TAYORO ;)</b>'))
+        super(DossierAdmin, self).save_model(request, obj, form, change)
 
 
 
@@ -205,19 +220,25 @@ class EmplacementMPTTAdmin(DraggableMPTTAdmin, BaseApplicationAdmin):
     list_display_links = ['indented_title', ]
 
 
-
 class DossierOut(Dossier):
     class Meta:
         proxy = True
+        verbose_name_plural = "Rapport - Liste des dossiers out"
 
 class DossierOutAdmin(DossierAdmin):
-    list_display = ['categorie_dossier', 'code', 'location','date_last_out']
+    list_display = ['categorie_dossier', 'code', 'location','date_last_out','out_since']
+
     def get_queryset(self, request):
-        return self.model.objects.filter(state__description='out')#objects.exclude(state=F("In"))
+        return self.model.objects.filter(state__description='out')
+    
+    def has_add_permission(self, request, obj=None):
+        return False
 
+    def has_delete_permission(self, request, obj=None):
+        return False
 
-
-
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 # Register your models here.
@@ -225,7 +246,6 @@ admin.site.register(AgentCategory)
 admin.site.register(FolderCategory)
 admin.site.register(Agent)
 admin.site.register(Dossier, DossierAdmin)
-#admin.site.register(Emplacement, EmplacementAdmin)
 admin.site.register(EmplacementMPTT, EmplacementMPTTAdmin)
 admin.site.register(Mouvement, MouvementAdmin)
 admin.site.register(DossierOut, DossierOutAdmin)

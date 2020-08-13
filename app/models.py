@@ -4,6 +4,7 @@ from treebeard.mp_tree import MP_Node
 from river.models.fields.state import StateField
 from mptt.forms import TreeNodeChoiceField
 from datetime import datetime, timezone
+from django.utils.timesince import timesince
 
 class TimedModel(models.Model):
 
@@ -76,6 +77,11 @@ class Dossier(TimedModel):
     def date_last_out(self):
         return datetime.now(timezone.utc)-list(self.mouvements.filter(sens='out').values('creation_time'))[-1]['creation_time']
 
+    @property
+    def out_since(self):
+        return timesince(self.mouvements.filter(sens='out').latest('creation_time').creation_time)
+
+
     def __str__(self):
         return "{} / {}".format(self.categorie_dossier, self.code)
 
@@ -87,34 +93,17 @@ class Dossier(TimedModel):
         ]
 
 
-"""class Emplacement(TimedModel, MP_Node):
-    name = models.CharField(max_length=30)
-
-    node_order_by = ['name']
-
-    def __str__(self):
-        return "{}".format(self.name)
-
-    class Meta:
-        verbose_name = "Emplacement de dossiers"
-        verbose_name_plural = "Emplacements de dossiers"
-
-"""
-
-
 class EmplacementMPTT(TimedModel, MPTTModel):
     name = models.CharField(max_length=30, unique=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE,
                             null=True, blank=True, related_name='children')
 
-
-
     class MPTTMeta:
         order_insertion_by = ['name']
 
     class Meta:
-        verbose_name = "Emplacement de dossiers MPTT"
-        verbose_name_plural = "Emplacements de dossiers MPTT"
+        verbose_name = "Emplacement de dossiers"
+        verbose_name_plural = "Emplacements de dossiers"
 
     
     def __str__(self):
@@ -129,20 +118,7 @@ class Mouvement(TimedModel):
         "Agent", on_delete=models.SET_NULL, null=True, related_name="mouvements")
     emplacement = TreeForeignKey("EmplacementMPTT", on_delete=models.SET_NULL, null=True,
                                     related_name="mouvements",)
-     #models.ForeignKey("EmplacementMPTT", on_delete=models.SET_NULL, null=True,
-                                    #related_name="mouvements")
     sens = models.CharField("Sens", max_length=3, blank=True)
-
-    """
-    @property
-    def timeout(self):
-        today=datetime.now(timezone.utc)
-        if self.sens=='out':
-            time=today - self.creation_time
-        else:
-            time= 'N/A'
-        return time
-    """
 
     def save(self, *args, **kwargs):
         if self.agent:
@@ -155,6 +131,6 @@ class Mouvement(TimedModel):
         return ""
 
     class Meta:
-        verbose_name = "Mouvement de dossier"
-        verbose_name_plural = "Mouvements de dossiers"
-        ordering = ['dossier', 'creation_time', ]
+        verbose_name = "mouvement"
+        verbose_name_plural = "Rapport - Mouvements des dossiers"
+        ordering = ['-creation_time', ]

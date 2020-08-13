@@ -23,3 +23,4 @@ class OutForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(OutForm, self).__init__(*args, **kwargs)
         self.fields['dossier'].disabled = True
+
