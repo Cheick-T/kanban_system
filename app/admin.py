@@ -54,6 +54,22 @@ def create_actions_buttons(obj, transition_approval):
 	"""
 
 
+class DansSalleArchivageFilter(admin.SimpleListFilter):
+    title = 'presence_salle_archivage'
+    parameter_name = 'is_in_archive'
+    def lookups(self, request, model_admin):
+        return (
+            ('Oui', 'Oui'),
+            ('Non', 'Non'),
+        )
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == 'Oui':
+            return queryset.filter(state__description="in")
+        elif value == 'Non':
+            return queryset.exclude(state__description="in")
+        return queryset
+
 class BaseApplicationAdmin(VersionAdmin,admin.ModelAdmin):
     date_hierarchy = 'update_time'
     readonly_fields = ['update_time', 'creation_time']
@@ -131,12 +147,17 @@ class MouvementCreationInline(admin.TabularInline):
 
 
 class DossierAdmin(BaseApplicationAdmin):
-    list_display = ['categorie_dossier', 'code', 'location',
+    list_display = ['is_in_archive','categorie_dossier', 'code', 'location',
                     'state', 'actions_buttons',]
     list_display_links = ['categorie_dossier', 'code', ]
     search_fields = ['code']
-    list_filter = ['categorie_dossier__title', 'state', 'creation_time', ]
+    list_filter = ['categorie_dossier__title', DansSalleArchivageFilter, 'state', 'creation_time']
     list_select_related = ('categorie_dossier', )
+
+    
+    def is_in_archive(self, obj):
+        return obj.state.description == "in"
+    is_in_archive.boolean = True
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -215,6 +236,9 @@ class DossierOutAdmin(DossierAdmin):
     'date_last_out']
     def get_queryset(self, request):
         return self.model.objects.filter(state__description='out')#objects.exclude(state=F("In"))
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 
