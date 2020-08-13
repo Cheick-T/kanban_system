@@ -69,8 +69,6 @@ class Dossier(TimedModel):
     code = models.CharField(max_length=10, blank=False)
     categorie_dossier = models.ForeignKey(
         "FolderCategory", on_delete=models.PROTECT, related_name="dossiers")
-    # emplacement = models.ForeignKey(
-    #    "Emplacement", on_delete=models.PROTECT, related_name="dossiers")
     state = StateField(editable=False)
 
     @property
@@ -87,36 +85,17 @@ class Dossier(TimedModel):
             ("can_manipulate_folders", "Can manipulate folders"),
         ]
 
-
-"""class Emplacement(TimedModel, MP_Node):
-    name = models.CharField(max_length=30)
-
-    node_order_by = ['name']
-
-    def __str__(self):
-        return "{}".format(self.name)
-
-    class Meta:
-        verbose_name = "Emplacement de dossiers"
-        verbose_name_plural = "Emplacements de dossiers"
-
-"""
-
-
 class EmplacementMPTT(TimedModel, MPTTModel):
     name = models.CharField(max_length=30, unique=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE,
                             null=True, blank=True, related_name='children')
 
-
-
     class MPTTMeta:
         order_insertion_by = ['name']
 
     class Meta:
-        verbose_name = "Emplacement de dossiers MPTT"
-        verbose_name_plural = "Emplacements de dossiers MPTT"
-
+        verbose_name = "Emplacement de dossiers"
+        verbose_name_plural = "Emplacements de dossiers"
     
     def __str__(self):
         return "{}".format(self.name)
@@ -134,17 +113,6 @@ class Mouvement(TimedModel):
                                     #related_name="mouvements")
     sens = models.CharField("Sens", max_length=3, blank=True)
 
-    """
-    @property
-    def timeout(self):
-        today=datetime.now(timezone.utc)
-        if self.sens=='out':
-            time=today - self.creation_time
-        else:
-            time= 'N/A'
-        return time
-    """
-
     def save(self, *args, **kwargs):
         if self.agent:
             self.sens = "out"
@@ -157,5 +125,5 @@ class Mouvement(TimedModel):
 
     class Meta:
         verbose_name = "Mouvement de dossier"
-        verbose_name_plural = "Mouvements de dossiers"
-        ordering = ['dossier', 'creation_time', ]
+        verbose_name_plural = "Rapport - Mouvements des dossiers"
+        ordering = ['dossier', '-creation_time', ]
