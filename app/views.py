@@ -13,8 +13,6 @@ from app.models import Dossier, Mouvement, Agent#, Emplacement
 from .forms import InForm, OutForm
 from django.views.generic.edit import CreateView
 
-# TODO : handle transactions
-
 
 class InMouvement(CreateView):
     form_class = InForm
@@ -39,37 +37,14 @@ class InMouvement(CreateView):
 
                 dossier.river.state.approve(
                     as_user=self.request.user, next_state=next_state)
-
-<<<<<<< HEAD
-                messages.success(request, "Modification approuvée pour le dossier")
-
-            except :
-                self.object.delete()
-                #messages.success(request, f"Modification approuvée pour le dossier: {dossier}")
-        except:
-            print("An exception occurred while saving mouvemnt")
-            #messages.success(request, f"Modification approuvée pour le dossier: {dossier}")
-=======
                 messages.success(self.request, mark_safe('Operation effectuée avec succès : "<b>{}</b>" remis à "<b>{}</b>"'.format(dossier, self.object.emplacement)))
-                
-
             except :
                 self.object.delete()
                 messages.success(self.request, "Rollback effectué: erreur durant la mise à jour du statut du dossier")
         except:
             messages.success(self.request, "Erreur : echec de creation du mouvement")
-            #print("An exception occurred while saving mouvemnt")
->>>>>>> e749dccc6f0915beb10eabf0b5d98c10538fa862
 
         return HttpResponseRedirect(self.get_success_url())
-
-
-        # TODO: et en cas de problème pour changer l'état, supprimer l'object Mouvement précédemment créé
-<<<<<<< HEAD
-
-=======
-        return HttpResponseRedirect(self.get_success_url())
->>>>>>> e749dccc6f0915beb10eabf0b5d98c10538fa862
 
 
 class OutMouvement(CreateView):
@@ -96,28 +71,13 @@ class OutMouvement(CreateView):
                     State, pk=self.kwargs.get('next_state_id'))
                 dossier.river.state.approve(
                     as_user=self.request.user, next_state=next_state)
-<<<<<<< HEAD
-                messages.success(self.request, mark_safe('Operation effectuée avec succès : "<b>{}</b>" remis à "<b>{}</b>"'.format(dossier, self.object.agent)))
-=======
 
-                #messages.success(request, f"Modification approuvée pour le dossier: {dossier}")
                 messages.success(self.request, mark_safe('Operation effectuée avec succès : "<b>{}</b>" remis à "<b>{}</b>"'.format(dossier, self.object.agent)))
-                # TODO: et en cas de problème pour changer l'état, supprimer l'object Mouvement précédemment créé
->>>>>>> e749dccc6f0915beb10eabf0b5d98c10538fa862
                 
             except:
-                messages.success(self.request, "Rollback effectué: erreur durant la mise à jour du statut du dossier")
                 self.object.delete()
                 messages.success(self.request, "Rollback effectué: erreur durant la mise à jour du statut du dossier")
         except:
-<<<<<<< HEAD
-            messages.success(self.request, "Erreur : echec de creation du mouvement")
-        
-        return HttpResponseRedirect(self.get_success_url())
-=======
-            #print("error mouvement")
             messages.success(self.request, "Erreur : echec de creation du mouvement")
 
         return HttpResponseRedirect(self.get_success_url())  
-
->>>>>>> e749dccc6f0915beb10eabf0b5d98c10538fa862
