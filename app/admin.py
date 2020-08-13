@@ -27,9 +27,6 @@ admin.site.index_title = "Espace d'administration"
 
 
 def create_actions_buttons(obj, transition_approval):
-    # approbation_url = reverse('valider_mouvement', kwargs={
-    #                          'dossier_id': obj.pk, 'next_state_id': transition_approval.transition.destination_state.pk})
-
     sens_mouvement = transition_approval.transition.destination_state.description
 
     if sens_mouvement == 'in':
@@ -177,20 +174,11 @@ class DossierAdmin(BaseApplicationAdmin):
         return super(DossierAdmin, self).get_list_display(request)
 
     def location(self, obj):
-        # if obj.state.description == "in":
-        #    ancetres = ' > '.join(
-        #        [x.name for x in obj.emplacement.get_ancestors()])
-        #    return ancetres + " > " + obj.emplacement.name
-        # else:
-        #    return obj.mouvements.latest('creation_time').agent
-        print(obj)
         if obj.state.description == "in":
 
             ancetres = ' > '.join(
                 [x.name for x in obj.mouvements.filter(sens="in").latest('creation_time').emplacement.get_ancestors()])
-            print(ancetres)
-            print(type(obj.mouvements.filter(sens="in").latest(
-                'creation_time').emplacement))
+
             return ancetres + " > " + obj.mouvements.filter(sens="in").latest('creation_time').emplacement.name
         else:
             return obj.mouvements.filter(sens="out").latest('creation_time').agent
@@ -214,26 +202,20 @@ class DossierAdmin(BaseApplicationAdmin):
         return False
 
 
-#class EmplacementAdmin(TreeAdmin, BaseApplicationAdmin):
-#    form = movenodeform_factory(Emplacement)
-
-
-
-
 class EmplacementMPTTAdmin(DraggableMPTTAdmin, VersionAdmin,admin.ModelAdmin):
     mptt_level_indent = 20
     list_display = ['tree_actions', 'indented_title', ]
     list_display_links = ['indented_title', ]
-
+    readonly_fields = ['update_time', 'creation_time']
 
 
 class DossierOut(Dossier):
     class Meta:
         proxy = True
+	verbose_name_plural = "Rapport - Liste des dossiers out"
 
 class DossierOutAdmin(DossierAdmin):
-    list_display = ['categorie_dossier', 'code', 'location',
-    'date_last_out']
+    list_display = ['categorie_dossier', 'code', 'location', 'date_last_out']
     def get_queryset(self, request):
         return self.model.objects.filter(state__description='out')
 
@@ -241,16 +223,10 @@ class DossierOutAdmin(DossierAdmin):
         return False
 
 
-
-
-
-
-# Register your models here.
 admin.site.register(AgentCategory)
 admin.site.register(FolderCategory)
 admin.site.register(Agent)
 admin.site.register(Dossier, DossierAdmin)
-#admin.site.register(Emplacement, EmplacementAdmin)
 admin.site.register(EmplacementMPTT, EmplacementMPTTAdmin)
 admin.site.register(Mouvement, MouvementAdmin)
 admin.site.register(DossierOut, DossierOutAdmin)
