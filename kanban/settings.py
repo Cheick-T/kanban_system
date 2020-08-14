@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'app',
     'api',
+    'Rapports',
     #'treebeard',
     'import_export',
     'reversion',
