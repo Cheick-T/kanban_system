@@ -1,0 +1,93 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+<!-- Override extrahead to add Chart.js -->
+{% block extrahead %}
+{{ block.super }}
+<!--
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const ctxBar = document.getElementById('myChartBar').getContext('2d');
+  // Sample data
+  const chartDataIn = {{chart_data_in | safe }};
+  const chartDataOut = {{chart_data_out | safe }};
+  // Parse the dates to JS
+  chartDataIn.forEach((d) => {
+    d.x = new Date(d.date);
+  });
+
+   chartDataOut.forEach((d) => {
+    d.x = new Date(d.date);
+  });
+  const chartBar = new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      datasets: [
+        {
+          fill: false,
+          label: 'In',
+          data: chartDataIn,
+          borderColor: 'rgb(12, 126, 169)',
+          backgroundColor: 'rgb(12, 126, 169)',
+        },
+        {
+          fill: false,
+          label: 'Out',
+          data: chartDataOut,
+          backgroundColor: 'rgb(255, 87, 51 )',
+          borderColor: 'rgb(255, 87, 51 )'
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        xAxes: [
+          {
+            offset:true,
+          	gridLines: {
+                    display: true,
+                    borderDash: [1, 1],
+                    tickMarkLength:5
+                },
+            type: 'time',
+            time: {
+              unit: 'day',
+              round: 'day',
+              displayFormats: {
+                day: 'MMM D',
+              },
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+    },
+  });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-10">
+        <canvas style="margin-bottom: 30px; width: 100%; height: 5%;" id="myChartBar"></canvas>
+    </div>
+</div>
+<!--
+<div style="width: 82.5%;">
+  <canvas style="margin-bottom: 30px; width: 100%; height: 5%;" id="myChartBar"></canvas>
+</div> -->
+<!-- Render the rest of the ChangeList view -->
+{{ block.super }}
+{% endblock %}}
