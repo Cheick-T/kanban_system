@@ -1,0 +1,142 @@
+[
+{
+    "model": "app.emplacementmptt",
+    "pk": 1,
+    "fields": {
+        "creation_time": "2020-08-14T01:01:58.135Z",
+        "update_time": "2020-08-14T01:01:58.135Z",
+        "name": "Batiment A",
+        "parent": null,
+        "lft": 1,
+        "rght": 12,
+        "tree_id": 1,
+        "level": 0
+    }
+},
+{
+    "model": "app.emplacementmptt",
+    "pk": 2,
+    "fields": {
+        "creation_time": "2020-08-14T01:02:14.908Z",
+        "update_time": "2020-08-14T01:02:14.908Z",
+        "name": "Batiment B",
+        "parent": null,
+        "lft": 1,
+        "rght": 8,
+        "tree_id": 2,
+        "level": 0
+    }
+},
+{
+    "model": "app.emplacementmptt",
+    "pk": 4,
+    "fields": {
+        "creation_time": "2020-08-14T01:03:41.808Z",
+        "update_time": "2020-08-14T01:04:05.937Z",
+        "name": "Salle A1",
+        "parent": 1,
+        "lft": 2,
+        "rght": 9,
+        "tree_id": 1,
+        "level": 1
+    }
+},
+{
+    "model": "app.emplacementmptt",
+    "pk": 5,
+    "fields": {
+        "creation_time": "2020-08-14T01:04:00.200Z",
+        "update_time": "2020-08-14T01:04:00.200Z",
+        "name": "Salle A2",
+        "parent": 1,
+        "lft": 10,
+        "rght": 11,
+        "tree_id": 1,
+        "level": 1
+    }
+},
+{
+    "model": "app.emplacementmptt",
+    "pk": 6,
+    "fields": {
+        "creation_time": "2020-08-14T01:04:30.091Z",
+        "update_time": "2020-08-14T01:09:34.490Z",
+        "name": "Etag\u00e8re A1 Sup\u00e9rieur",
+        "parent": 4,
+        "lft": 5,
+        "rght": 8,
+        "tree_id": 1,
+        "level": 2
+    }
+},
+{
+    "model": "app.emplacementmptt",
+    "pk": 7,
+    "fields": {
+        "creation_time": "2020-08-14T01:04:57.457Z",
+        "update_time": "2020-08-14T01:10:16.682Z",
+        "name": "Etag\u00e8re A1 Inf\u00e9rieur",
+        "parent": 4,
+        "lft": 3,
+        "rght": 4,
+        "tree_id": 1,
+        "level": 2
+    }
+},
+{
+    "model": "app.emplacementmptt",
+    "pk": 8,
+    "fields": {
+        "creation_time": "2020-08-14T01:05:46.459Z",
+        "update_time": "2020-08-14T01:12:12.330Z",
+        "name": "Casier A1",
+        "parent": 6,
+        "lft": 6,
+        "rght": 7,
+        "tree_id": 1,
+        "level": 3
+    }
+},
+{
+    "model": "app.emplacementmptt",
+    "pk": 9,
+    "fields": {
+        "creation_time": "2020-08-14T01:06:16.287Z",
+        "update_time": "2020-08-14T01:06:16.288Z",
+        "name": "Salle B1",
+        "parent": 2,
+        "lft": 2,
+        "rght": 7,
+        "tree_id": 2,
+        "level": 1
+    }
+},
+{
+    "model": "app.emplacementmptt",
+    "pk": 11,
+    "fields": {
+        "creation_time": "2020-08-14T01:07:01.795Z",
+        "update_time": "2020-08-14T01:10:47.049Z",
+        "name": "Etag\u00e8re B1 Droite",
+        "parent": 9,
+        "lft": 3,
+        "rght": 4,
+        "tree_id": 2,
+        "level": 2
+    }
+},
+{
+    "model": "app.emplacementmptt",
+    "pk": 12,
+    "fields": {
+        "creation_time": "2020-08-14T01:11:24.442Z",
+        "update_time": "2020-08-14T01:11:24.442Z",
+        "name": "Etag\u00e8re B1 Gauche",
+        "parent": 9,
+        "lft": 5,
+        "rght": 6,
+        "tree_id": 2,
+        "level": 2
+    }
+}
+]
