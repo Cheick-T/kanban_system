@@ -131,6 +131,10 @@ class MouvementInline(admin.TabularInline):
     def has_change_permission(self, request, obj=None):
         return False
 
+class AgentCategoryInline(admin.TabularInline):
+        model = AgentCategory
+        extra = 0
+
 
 class MouvementCreationInline(admin.TabularInline):
     model = Mouvement
@@ -141,8 +145,10 @@ class MouvementCreationInline(admin.TabularInline):
 
 
 class DossierAdmin(BaseApplicationAdmin):
+    def nombre_total_de_mouvements(self):
+        return len(self.mouvements.all())
     list_display = ['is_in_archive','categorie_dossier', 'code', 'location',
-                    'state', 'actions_buttons',]
+                    'state', 'actions_buttons',nombre_total_de_mouvements]
     list_display_links = ['categorie_dossier', 'code', ]
     search_fields = ['code']
     list_filter = ['categorie_dossier__title', DansSalleArchivageFilter, 'state', 'creation_time']
@@ -218,9 +224,15 @@ class DossierOutAdmin(DossierAdmin):
         return False
 
 
+class AgentAdmin(VersionAdmin,admin.ModelAdmin):
+    def compte_dossiers_out(self):
+        return len(self.mouvements.filter(dossier__state__description='out'))
+    list_display = ['code','nom' ,'prenoms','categorie_agent',compte_dossiers_out]
+
+
 admin.site.register(AgentCategory)
 admin.site.register(FolderCategory)
-admin.site.register(Agent)
+admin.site.register(Agent,AgentAdmin)
 admin.site.register(Dossier, DossierAdmin)
 admin.site.register(EmplacementMPTT, EmplacementMPTTAdmin)
 #admin.site.register(Mouvement, MouvementAdmin)

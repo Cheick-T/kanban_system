@@ -12,7 +12,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 class DossierOut(Dossier):
     class Meta:
         proxy = True
-        verbose_name_plural = "Rapport - Liste des dossiers out"
+        verbose_name_plural = "Dossiers hors de la salle d’archivage"
 
 class DossierOutAdmin(DossierAdmin):
     list_display = ['categorie_dossier', 'code', 'location', 'out_since']

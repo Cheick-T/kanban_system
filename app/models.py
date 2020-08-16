@@ -111,8 +111,8 @@ class Mouvement(TimedModel):
     dossier = models.ForeignKey(
         "Dossier", on_delete=models.PROTECT, related_name="mouvements")
     agent = models.ForeignKey(
-        "Agent", on_delete=models.SET_NULL, null=True, related_name="mouvements")
-    emplacement = TreeForeignKey("EmplacementMPTT", on_delete=models.SET_NULL, null=True,
+        "Agent", on_delete=models.PROTECT, null=True, related_name="mouvements")
+    emplacement = TreeForeignKey("EmplacementMPTT", on_delete=models.PROTECT, null=True,
                                     related_name="mouvements",)
     sens = models.CharField("Sens", max_length=3, blank=True)
 
