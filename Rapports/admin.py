@@ -24,8 +24,10 @@ class DossierOutAdmin(DossierAdmin):
         return False
 
 class RapportMouvement(Mouvement):
+    
     class Meta:
         proxy = True
+        verbose_name_plural = "Mouvements de dossiers"
 
 class Mouvement1Admin(MouvementAdmin):
     def get_queryset(self, request):

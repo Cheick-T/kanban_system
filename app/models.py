@@ -128,5 +128,5 @@ class Mouvement(TimedModel):
 
     class Meta:
         verbose_name = "Mouvement de dossier"
-        verbose_name_plural = "Rapport - Mouvements des dossiers"
+        verbose_name_plural = "Mouvements des dossiers"
         ordering = ['dossier', '-creation_time', ]

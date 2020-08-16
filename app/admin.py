@@ -131,9 +131,6 @@ class MouvementInline(admin.TabularInline):
     def has_change_permission(self, request, obj=None):
         return False
 
-class AgentCategoryInline(admin.TabularInline):
-        model = AgentCategory
-        extra = 0
 
 
 class MouvementCreationInline(admin.TabularInline):
@@ -147,6 +144,7 @@ class MouvementCreationInline(admin.TabularInline):
 class DossierAdmin(BaseApplicationAdmin):
     def nombre_total_de_mouvements(self):
         return len(self.mouvements.all())
+        
     list_display = ['is_in_archive','categorie_dossier', 'code', 'location',
                     'state', 'actions_buttons',nombre_total_de_mouvements]
     list_display_links = ['categorie_dossier', 'code', ]
@@ -230,7 +228,26 @@ class AgentAdmin(VersionAdmin,admin.ModelAdmin):
     list_display = ['code','nom' ,'prenoms','categorie_agent',compte_dossiers_out]
 
 
-admin.site.register(AgentCategory)
+class AgentInline(admin.TabularInline):
+    model = Agent
+    readonly_fields = ['code', 'nom','prenoms']
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+class AgentCategoryAdmin(VersionAdmin,admin.ModelAdmin):
+    inlines = [AgentInline
+        ,
+    ]
+
+
+admin.site.register(AgentCategory,AgentCategoryAdmin)
 admin.site.register(FolderCategory)
 admin.site.register(Agent,AgentAdmin)
 admin.site.register(Dossier, DossierAdmin)
