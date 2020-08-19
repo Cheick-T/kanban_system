@@ -1,0 +1,24 @@
+[
+{
+    "model": "app.foldercategory",
+    "pk": 1,
+    "fields": {
+        "creation_time": "2020-08-14T00:56:17.785Z",
+        "update_time": "2020-08-14T00:56:17.785Z",
+        "title": "Dossier Patient",
+        "description": null,
+        "active": true
+    }
+},
+{
+    "model": "app.foldercategory",
+    "pk": 2,
+    "fields": {
+        "creation_time": "2020-08-14T01:00:52.160Z",
+        "update_time": "2020-08-14T01:00:52.160Z",
+        "title": "Registre de Dispensation",
+        "description": null,
+        "active": true
+    }
+}
+]

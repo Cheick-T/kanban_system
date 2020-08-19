@@ -17,6 +17,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
+
 admin.site.site_header = 'Archivage des dossiers'
 admin.site.site_title = 'Archivage des dossiers'
 admin.site.index_title = "Espace d'administration"
@@ -77,7 +78,7 @@ class MouvementAdmin(admin.ModelAdmin):
     list_select_related = ('dossier', 'agent', 'emplacement',)
     readonly_fields = ['sens', 'dossier', 'agent',
                        'emplacement', 'update_time', 'creation_time']
-    list_per_page = 10
+    list_per_page=10
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -132,6 +133,7 @@ class MouvementInline(admin.TabularInline):
         return False
 
 
+
 class MouvementCreationInline(admin.TabularInline):
     model = Mouvement
     max_num = 1
@@ -141,14 +143,16 @@ class MouvementCreationInline(admin.TabularInline):
 
 
 class DossierAdmin(BaseApplicationAdmin):
+    def nombre_total_de_mouvements(self):
+        return len(self.mouvements.all())
+        
     list_display = ['is_in_archive','categorie_dossier', 'code', 'location',
-                    'state', 'actions_buttons',]
+                    'state', 'actions_buttons',nombre_total_de_mouvements]
     list_display_links = ['categorie_dossier', 'code', ]
     search_fields = ['code']
     list_filter = ['categorie_dossier__title', DansSalleArchivageFilter, 'state', 'creation_time']
     list_select_related = ('categorie_dossier', )
-    list_per_page = 10
-
+    list_per_page=10
 
     def is_in_archive(self, obj):
         return obj.state.description == "in"
@@ -211,8 +215,7 @@ class DossierOut(Dossier):
 
 class DossierOutAdmin(DossierAdmin):
     list_display = ['categorie_dossier', 'code', 'location', 'out_since']
-    list_per_page = 10
-
+    list_per_page=10
     def get_queryset(self, request):
         return self.model.objects.filter(state__description='out')
 
@@ -220,10 +223,33 @@ class DossierOutAdmin(DossierAdmin):
         return False
 
 
-admin.site.register(AgentCategory)
+class AgentAdmin(VersionAdmin,admin.ModelAdmin):
+    def compte_dossiers_out(self):
+        return len(self.mouvements.filter(dossier__state__description='out'))
+    compte_dossiers_out.short_description ="Dossiers empruntés"
+    
+    list_display = ['categorie_agent','code','nom' ,'prenoms',compte_dossiers_out]
+
+
+class AgentInline(admin.TabularInline):
+    model = Agent
+    readonly_fields = ['code', 'nom','prenoms']
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+class AgentCategoryAdmin(VersionAdmin,admin.ModelAdmin):
+    inlines = [AgentInline,]
+
+
+admin.site.register(AgentCategory,AgentCategoryAdmin)
 admin.site.register(FolderCategory)
-admin.site.register(Agent)
+admin.site.register(Agent,AgentAdmin)
 admin.site.register(Dossier, DossierAdmin)
 admin.site.register(EmplacementMPTT, EmplacementMPTTAdmin)
-admin.site.register(Mouvement, MouvementAdmin)
-admin.site.register(DossierOut, DossierOutAdmin)

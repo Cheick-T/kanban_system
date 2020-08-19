@@ -1,0 +1,46 @@
+[
+{
+    "model": "app.agentcategory",
+    "pk": 1,
+    "fields": {
+        "creation_time": "2020-08-14T01:23:14.409Z",
+        "update_time": "2020-08-14T01:23:14.409Z",
+        "title": "AMD",
+        "description": null,
+        "active": true
+    }
+},
+{
+    "model": "app.agentcategory",
+    "pk": 2,
+    "fields": {
+        "creation_time": "2020-08-14T01:24:01.986Z",
+        "update_time": "2020-08-14T01:24:01.986Z",
+        "title": "Assistant(e) Social(e)",
+        "description": null,
+        "active": true
+    }
+},
+{
+    "model": "app.agentcategory",
+    "pk": 3,
+    "fields": {
+        "creation_time": "2020-08-14T01:24:15.819Z",
+        "update_time": "2020-08-14T01:24:15.819Z",
+        "title": "Medecin",
+        "description": null,
+        "active": true
+    }
+},
+{
+    "model": "app.agentcategory",
+    "pk": 4,
+    "fields": {
+        "creation_time": "2020-08-14T01:24:55.117Z",
+        "update_time": "2020-08-14T01:24:55.117Z",
+        "title": "Conseiller(e) communautaire",
+        "description": null,
+        "active": true
+    }
+}
+]

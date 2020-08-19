@@ -1,0 +1,13 @@
+[
+{
+    "model": "river.workflow",
+    "pk": 1,
+    "fields": {
+        "date_created": "2020-08-14T02:15:22.577Z",
+        "date_updated": "2020-08-14T02:15:22.577Z",
+        "content_type": 23,
+        "field_name": "state",
+        "initial_state": 1
+    }
+}
+]

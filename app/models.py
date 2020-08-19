@@ -8,15 +8,15 @@ from django.utils.timesince import timesince
 
 class TimedModel(models.Model):
 
-    creation_time = models.DateTimeField(auto_now_add=True)
-    update_time = models.DateTimeField(auto_now=True)
+    creation_time = models.DateTimeField(auto_now_add=True, verbose_name="Date de creation")
+    update_time = models.DateTimeField(auto_now=True, verbose_name="Date de modification")
 
     class Meta:
         abstract = True
 
 
 class AgentCategory(TimedModel):
-    title = models.CharField(max_length=50, blank=False)
+    title = models.CharField(max_length=50, blank=False, verbose_name="Libelle")
     description = models.CharField(
         'Description', max_length=200, blank=True, null=True)
     active = models.BooleanField('Active', default=True)
@@ -31,7 +31,7 @@ class AgentCategory(TimedModel):
 
 
 class FolderCategory(TimedModel):
-    title = models.CharField(max_length=50, blank=False)
+    title = models.CharField(max_length=50, blank=False, verbose_name="Libelle")
     description = models.CharField(
         'Description', max_length=200, blank=True, null=True)
     active = models.BooleanField('Active', default=True)
@@ -46,11 +46,11 @@ class FolderCategory(TimedModel):
 
 
 class Agent(TimedModel):
-    code = models.CharField(max_length=10, blank=False)
-    nom = models.CharField(max_length=50, blank=False)
-    prenoms = models.CharField(max_length=50, blank=True, null=True)
+    code = models.CharField(max_length=10, blank=False, verbose_name="Code agent")
+    nom = models.CharField(max_length=50, blank=False, verbose_name="NOM")
+    prenoms = models.CharField(max_length=50, blank=True, null=True, verbose_name="Prénoms")
     categorie_agent = models.ForeignKey(
-        "AgentCategory", on_delete=models.PROTECT, related_name="agents", limit_choices_to={'active': True})
+        "AgentCategory", on_delete=models.PROTECT, related_name="agents", limit_choices_to={'active': True}, verbose_name="Catégorie")
 
     @property
     def fullname(self):
@@ -66,9 +66,9 @@ class Agent(TimedModel):
 
 
 class Dossier(TimedModel):
-    code = models.CharField(max_length=10, blank=False)
+    code = models.CharField(max_length=10, blank=False, verbose_name="Code du dossier")
     categorie_dossier = models.ForeignKey(
-        "FolderCategory", on_delete=models.PROTECT, related_name="dossiers")
+        "FolderCategory", on_delete=models.PROTECT, related_name="dossiers", verbose_name="Catégorie de dossier")
     state = StateField(editable=False)
 
     @property
@@ -111,8 +111,8 @@ class Mouvement(TimedModel):
     dossier = models.ForeignKey(
         "Dossier", on_delete=models.PROTECT, related_name="mouvements")
     agent = models.ForeignKey(
-        "Agent", on_delete=models.SET_NULL, null=True, related_name="mouvements")
-    emplacement = TreeForeignKey("EmplacementMPTT", on_delete=models.SET_NULL, null=True,
+        "Agent", on_delete=models.PROTECT, null=True, related_name="mouvements")
+    emplacement = TreeForeignKey("EmplacementMPTT", on_delete=models.PROTECT, null=True,
                                     related_name="mouvements",)
     sens = models.CharField("Sens", max_length=3, blank=True)
 
@@ -128,5 +128,5 @@ class Mouvement(TimedModel):
 
     class Meta:
         verbose_name = "Mouvement de dossier"
-        verbose_name_plural = "Rapport - Mouvements des dossiers"
+        verbose_name_plural = "Mouvements des dossiers"
         ordering = ['dossier', '-creation_time', ]

@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from django.urls import path
+
 from app.views import InMouvement, OutMouvement
 
 urlpatterns = [

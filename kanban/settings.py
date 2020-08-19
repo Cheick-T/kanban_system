@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'app',
     'api',
-    #'treebeard',
+    'rapports',
     'import_export',
     'reversion',
     'mptt',
@@ -51,8 +51,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'drf_yasg',
-    #'debug_toolbar',
-    #'template_profiler_panel',
+    'debug_toolbar',
 ]
 
 """
@@ -97,7 +96,7 @@ ROOT_URLCONF = 'kanban.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [''],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -161,10 +160,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+if DEBUG:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 
 from django.contrib.messages import constants as messages
 
@@ -176,10 +181,3 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-"""
-INTERNAL_IPS = [
-    # ...
-    '127.0.0.1',
-    # ...
-]
-"""

@@ -5,5 +5,7 @@ static
 __pycache__/
 db.sqlite3
 *.docx
-*.ppsx
 *.pptx
+*.ppsx
+**/migrations
+migrations
