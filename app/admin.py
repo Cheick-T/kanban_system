@@ -77,6 +77,7 @@ class MouvementAdmin(admin.ModelAdmin):
     list_select_related = ('dossier', 'agent', 'emplacement',)
     readonly_fields = ['sens', 'dossier', 'agent',
                        'emplacement', 'update_time', 'creation_time']
+    list_per_page = 10
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -146,6 +147,7 @@ class DossierAdmin(BaseApplicationAdmin):
     search_fields = ['code']
     list_filter = ['categorie_dossier__title', DansSalleArchivageFilter, 'state', 'creation_time']
     list_select_related = ('categorie_dossier', )
+    list_per_page = 10
 
 
     def is_in_archive(self, obj):
@@ -209,6 +211,8 @@ class DossierOut(Dossier):
 
 class DossierOutAdmin(DossierAdmin):
     list_display = ['categorie_dossier', 'code', 'location', 'out_since']
+    list_per_page = 10
+
     def get_queryset(self, request):
         return self.model.objects.filter(state__description='out')
 
