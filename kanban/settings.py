@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'app',
     'api',
-    'rapports',
+    'Rapports',
     'import_export',
     'reversion',
     'mptt',
