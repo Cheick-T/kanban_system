@@ -23,6 +23,7 @@ class InMouvement(CreateView):
     def get_initial(self, *args, **kwargs):
         return {
             "dossier": get_object_or_404(Dossier, pk=self.kwargs.get('dossier_id')),
+            "sens": get_object_or_404(State, pk=self.kwargs.get('next_state_id')).slug
         }
 
     def form_valid(self, form):
@@ -56,6 +57,7 @@ class OutMouvement(CreateView):
     def get_initial(self, *args, **kwargs):
         return {
             "dossier": get_object_or_404(Dossier, pk=self.kwargs.get('dossier_id')),
+            "sens": get_object_or_404(State, pk=self.kwargs.get('next_state_id')).slug
         }
 
     def form_valid(self, form):
