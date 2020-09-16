@@ -18,7 +18,7 @@ class TimedModel(models.Model):
 class AgentCategory(TimedModel):
     title = models.CharField(max_length=50, blank=False, verbose_name="Libelle")
     description = models.CharField(
-        'Description', max_length=200, blank=True, null=True)
+        'Correspondance sur Slug de state', max_length=200, blank=True, null=True)
     active = models.BooleanField('Active', default=True)
 
     def __str__(self):
@@ -46,7 +46,7 @@ class FolderCategory(TimedModel):
 
 
 class Agent(TimedModel):
-    code = models.CharField(max_length=10, blank=False, verbose_name="Code agent")
+    code = models.CharField("Nom d'utilisateur de l'agent",max_length=10, blank=False) #,verbose_name="Code agent")
     nom = models.CharField(max_length=50, blank=False, verbose_name="NOM")
     prenoms = models.CharField(max_length=50, blank=True, null=True, verbose_name="Prénoms")
     categorie_agent = models.ForeignKey(

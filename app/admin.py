@@ -201,13 +201,25 @@ class DossierAdmin(BaseApplicationAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
+    def get_queryset(self, request):
+        qs = super(DossierAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        inter=qs.filter(state__description="out").filter(mouvements__agent__code=request.user.username).values("mouvements__agent__nom","code")
+        code=[]
+        for i in inter:
+            if list(Dossier.objects.filter(code=i["code"]).values("mouvements__agent__code").latest('mouvements__creation_time').values())[0]==request.user.username:
+                code.append(i["code"])
+        #print(code)
+        return qs.filter(code__in=code)
+
 
 class EmplacementMPTTAdmin(DraggableMPTTAdmin, VersionAdmin,admin.ModelAdmin):
     mptt_level_indent = 20
     list_display = ['tree_actions', 'indented_title', ]
     list_display_links = ['indented_title', ]
     readonly_fields = ['update_time', 'creation_time']
-
+"""
 class DossierOut(Dossier):
     class Meta:
         proxy = True
@@ -221,7 +233,7 @@ class DossierOutAdmin(DossierAdmin):
 
     def has_add_permission(self, request, obj=None):
         return False
-
+"""
 
 class AgentAdmin(VersionAdmin,admin.ModelAdmin):
     def compte_dossiers_out(self):
@@ -247,9 +259,28 @@ class AgentInline(admin.TabularInline):
 class AgentCategoryAdmin(VersionAdmin,admin.ModelAdmin):
     inlines = [AgentInline,]
 
+"""
+class DossierOutuser(Dossier):
+    class Meta:
+        proxy = True
+        verbose_name_plural = "Dossiers Chez moi"
+
+class DossierOutuserAdmin(DossierAdmin):
+    list_display = ['categorie_dossier', 'code', 'location', 'out_since']
+    list_per_page=10
+
+    def get_queryset(self, request):
+        print(request.user.username)
+        return self.model.objects.filter(mouvements__agent__code=request.user.username)
+
+    def has_add_permission(self, request, obj=None):
+        return False
+"""
+
 
 admin.site.register(AgentCategory,AgentCategoryAdmin)
 admin.site.register(FolderCategory)
 admin.site.register(Agent,AgentAdmin)
 admin.site.register(Dossier, DossierAdmin)
 admin.site.register(EmplacementMPTT, EmplacementMPTTAdmin)
+
