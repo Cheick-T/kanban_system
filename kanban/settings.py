@@ -27,6 +27,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['web', 'localhost']
 CSRF_TRUSTED_ORIGINS = ['web','localhost']
+#ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -52,7 +53,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'drf_yasg',
-    'debug_toolbar',
+    #'debug_toolbar',
 ]
 
 REST_FRAMEWORK = {
@@ -143,6 +144,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
 if DEBUG:
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
@@ -151,4 +153,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-from django.contrib.messages import constants as messages
+
