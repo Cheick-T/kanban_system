@@ -1,4 +1,4 @@
-#!/home/ubuntu/kanban/bin/python3
+#!/usr/local/bin/python
 
 # -*- coding: utf-8 -*-
 import re
