@@ -24,8 +24,8 @@ SECRET_KEY = '1uif&b$sglfb&!sfz^_$d)ne+n_1q3gnd^*0=uu_&$7-x8c=ns'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['web', 'localhost', '172.22.0.1']
-CSRF_TRUSTED_ORIGINS = ['web','localhost', '172.22.0.1']
+ALLOWED_HOSTS = ['web', 'localhost', '172.22.0.1','127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['web','localhost', '172.22.0.1','127.0.0.1']
 #ALLOWED_HOSTS = []
 
 
