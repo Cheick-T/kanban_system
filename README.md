@@ -1,3 +1,3 @@
-# kanban_system
-access:
-User: admin; password: admin01
+## Accounts
+
+Admin : admin / admin01
