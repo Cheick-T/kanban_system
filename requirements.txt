@@ -29,6 +29,7 @@ Jinja2==2.11.2
 MarkupPy==1.14
 MarkupSafe==1.1.1
 mock==4.0.2
+mysqlclient==2.0.1
 odfpy==1.4.1
 openpyxl==3.0.4
 packaging==20.4
