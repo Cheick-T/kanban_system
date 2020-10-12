@@ -106,7 +106,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kanban_data',
         'USER': 'root',
-        'PASSWORD' : 'mysqlarr01',
+        'PASSWORD' : 'T59PNfzNSb',
         'HOST': 'db',
         'PORT': 3306,
         'OPTIONS': {'charset': 'utf8mb4'},
