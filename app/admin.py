@@ -240,12 +240,14 @@ class AgentAdmin(VersionAdmin,admin.ModelAdmin):
         return len(self.mouvements.filter(dossier__state__description='out'))
     compte_dossiers_out.short_description ="Dossiers empruntés"
     
-    list_display = ['categorie_agent','code','nom' ,'prenoms',compte_dossiers_out]
+    list_display = ['categorie_agent','code',
+                        'nom' ,'prenoms',compte_dossiers_out]
 
 
 class AgentInline(admin.TabularInline):
     model = Agent
-    readonly_fields = ['code', 'nom','prenoms']
+    readonly_fields = ['code', 
+            'nom','prenoms']
 
     def has_delete_permission(self, request, obj=None):
         return False

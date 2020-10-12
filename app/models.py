@@ -47,7 +47,7 @@ class FolderCategory(TimedModel):
 
 
 class Agent(TimedModel):
-    code = models.CharField("Nom d'utilisateur de l'agent",max_length=10, blank=False) #,verbose_name="Code agent")
+    code = models.CharField(max_length=10, blank=False) #,verbose_name="Code agent")
     user = models.OneToOneField(User, on_delete=models.PROTECT)
     nom = models.CharField(max_length=50, blank=False, verbose_name="NOM")
     prenoms = models.CharField(max_length=50, blank=True, null=True, verbose_name="Prénoms")
