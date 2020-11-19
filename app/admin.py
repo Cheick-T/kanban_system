@@ -201,17 +201,17 @@ class DossierAdmin(BaseApplicationAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
-    def get_queryset(self, request):
-        qs = super(DossierAdmin, self).get_queryset(request)
-        if request.user.is_superuser:
-            return qs
-        inter=qs.filter(state__description="out").filter(mouvements__agent__user__username=request.user.username).values("mouvements__agent__nom","code")
-        code=[]
-        for i in inter:
-            if list(Dossier.objects.filter(code=i["code"]).values("mouvements__agent__user__username").latest('mouvements__creation_time').values())[0]==request.user.username:
-                code.append(i["code"])
-        #print(code)
-        return qs.filter(code__in=code)
+    # def get_queryset(self, request):
+    #     qs = super(DossierAdmin, self).get_queryset(request)
+    #     if request.user.is_superuser:
+    #         return qs
+    #     inter=qs.filter(state__description="out").filter(mouvements__agent__user__username=request.user.username).values("mouvements__agent__nom","code")
+    #     code=[]
+    #     for i in inter:
+    #         if list(Dossier.objects.filter(code=i["code"]).values("mouvements__agent__user__username").latest('mouvements__creation_time').values())[0]==request.user.username:
+    #             code.append(i["code"])
+    #     #print(code)
+    #     return qs.filter(code__in=code)
 
 
 class EmplacementMPTTAdmin(DraggableMPTTAdmin, VersionAdmin,admin.ModelAdmin):
