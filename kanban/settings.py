@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '1uif&b$sglfb&!sfz^_$d)ne+n_1q3gnd^*0=uu_&$7-x8c=ns'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['web', 'localhost', '172.22.0.1', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['web','localhost', '172.22.0.1', '127.0.0.1']
@@ -146,8 +146,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_URL = '/static/'
-# if DEBUG:
-#     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+ if DEBUG:
+     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
